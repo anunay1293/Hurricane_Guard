@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Hurricane_App</string>
+    <string name="advice_meditation">Practice mindfulness through meditation to reduce stress and anxiety during challenging times. 
+        Set aside a few minutes each day to focus on your breathing, relax your mind, and cultivate a sense of calm amidst the storm.</string>
+    <string name="advice_family_support">Stay connected with loved ones during difficult times. Reach out to family and friends for emotional
+        support and create a sense of community to share your feelings,
+        thoughts, and concerns.</string>
+    <string name="advice_relaxation">Engage in relaxation techniques like deep breathing exercises, progressive muscle relaxation, or listening
+        to calming music. These activities help your body and mind to recover from stress and tension.</string>
+    <string name="advice_sleep">Maintain a consistent sleep schedule, even during stressful situations. Quality sleep is essential for mental
+        and physical well-being, helping you stay focused and resilient during emergencies.</string>
+    <string name="advice_limit_news">Limit exposure to stressful news and social media updates. Take breaks from constant information overload to
+        prevent feeling overwhelmed and maintain a positive outlook.</string>
+</resources>
