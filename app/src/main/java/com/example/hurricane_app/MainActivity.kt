@@ -13,18 +13,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.hurricane_app.UserInterface.screens.HurricaneScreen
+import com.example.hurricane_app.navigation.Screen
 import com.example.hurricane_app.ui.theme.Hurricane_AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,12 +45,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Hurricane_AppTheme {
+                val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ShelterDisplay()
+                    MainScreen(navController)
+                   // ShelterDisplay()
                    // MentalHealthScreen()
                 }
             }
@@ -45,7 +60,74 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun MainScreen(navController: NavHostController) {
+    Scaffold(
+        bottomBar = { AppBottomNavigation(navController) }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Screen.MentalHealth.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.MentalHealth.route) {
+                MentalHealthScreen()
+            }
+            composable(Screen.Shelter.route) {
+                ShelterDisplay()
+            }
+            composable(Screen.StayAtHome.route) {
+                StayAtHomeScreen()
+            }
+            composable(Screen.Hurricane.route) {
+                HurricaneScreen()
+            }
+        }
+    }
+}
 
+@Composable
+fun StayAtHomeScreen() {
+    val guidelines = listOf(
+        Pair(R.drawable.barricade, R.string.guideline_barricade),
+        Pair(R.drawable.gas_precautions, R.string.guideline_gas_precaution),
+        Pair(R.drawable.essential_items, R.string.guideline_essential_items),
+        Pair(R.drawable.stock_supplies, R.string.guideline_stock_supplies),
+        Pair(R.drawable.emergency_contacts, R.string.guideline_emergency_contacts)
+    )
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        items(guidelines) { guideline ->
+            MentalHealthCard(imageRes = guideline.first, adviceTextRes = guideline.second)
+        }
+    }
+}
+
+
+@Composable
+fun AppBottomNavigation(navController: NavController) {
+    val items = listOf(
+        Screen.MentalHealth to R.drawable.ic_mental_health, // Replace with appropriate icons
+        Screen.Shelter to R.drawable.ic_shelter,
+        Screen.StayAtHome to R.drawable.ic_stay_at_home,
+        Screen.Hurricane to R.drawable.ic_hurricane
+    )
+
+    BottomNavigation {
+        items.forEach { (screen, iconRes) ->
+            BottomNavigationItem(
+                selected = navController.currentDestination?.route == screen.route,
+                onClick = { navController.navigate(screen.route) },
+                icon = { Icon(imageVector = ImageVector.vectorResource(id = iconRes), contentDescription = screen.route) },
+                label = { Text(text = screen.route.replace("_", " ").capitalize()) }
+            )
+        }
+    }
+}
 @Composable
 fun MentalHealthScreen(){
     val resources = listOf(
