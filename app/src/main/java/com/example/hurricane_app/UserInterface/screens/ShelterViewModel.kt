@@ -1,35 +1,33 @@
 package com.example.hurricane_app.UserInterface.screens
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hurricane_app.network.ShelterApi
+import com.example.hurricane_app.network.ShelterFeature
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-sealed interface ShelterUiState{
+class ShelterViewModel : ViewModel() {
 
-}
-class ShelterViewModel:ViewModel(){
-    var shelterUiState: String by mutableStateOf("")
-        private set
+    private val _shelterUiState = MutableStateFlow<ShelterUiState>(ShelterUiState.Loading)
+    val shelterUiState: StateFlow<ShelterUiState> = _shelterUiState
+
     init {
-        getMarsPhotos()
+        fetchShelterData()
     }
-    fun getMarsPhotos() {
+
+    private fun fetchShelterData() {
         viewModelScope.launch {
-            val listResult = ShelterApi.retrofitService.getShelters()
-            shelterUiState=listResult
+            try {
+                val response = ShelterApi.retrofitService.getShelters()
+                _shelterUiState.value = ShelterUiState.Success(response.features)
+            } catch (e: Exception) {
+                _shelterUiState.value = ShelterUiState.Error("Failed to load shelters: ${e.message}")
+            }
         }
     }
-
-
-
-
-
 }
-
 
 
 
