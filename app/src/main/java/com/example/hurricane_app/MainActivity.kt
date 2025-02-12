@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Hurricane_AppTheme {
                 val navController = rememberNavController()
-                // A surface container using the 'background' color from the theme
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -111,7 +111,7 @@ fun StayAtHomeScreen() {
 @Composable
 fun AppBottomNavigation(navController: NavController) {
     val items = listOf(
-        Screen.MentalHealth to R.drawable.ic_mental_health, // Replace with appropriate icons
+        Screen.MentalHealth to R.drawable.ic_mental_health,
         Screen.Shelter to R.drawable.ic_shelter,
         Screen.StayAtHome to R.drawable.ic_stay_at_home,
         Screen.Hurricane to R.drawable.ic_hurricane
