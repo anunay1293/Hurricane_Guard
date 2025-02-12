@@ -11,4 +11,9 @@
         and physical well-being, helping you stay focused and resilient during emergencies.</string>
     <string name="advice_limit_news">Limit exposure to stressful news and social media updates. Take breaks from constant information overload to
         prevent feeling overwhelmed and maintain a positive outlook.</string>
+    <string name="guideline_barricade">Secure all windows and doors with barricades or storm shutters to prevent wind damage.</string>
+    <string name="guideline_gas_precaution">Turn off gas valves and avoid using open flames inside the house during the storm.</string>
+    <string name="guideline_essential_items">Keep flashlights, batteries, water, non-perishable food, and first-aid supplies accessible.</string>
+    <string name="guideline_stock_supplies">Stock up on necessary medications, pet supplies, and hygiene products for at least 72 hours.</string>
+    <string name="guideline_emergency_contacts">Have a list of emergency contacts and local shelter information readily available.</string>
 </resources>
