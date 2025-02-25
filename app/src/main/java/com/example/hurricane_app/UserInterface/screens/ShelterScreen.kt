@@ -16,29 +16,35 @@ fun ShelterScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
-    ShelterDisplayScreen(shelterUiState, modifier.padding(top = contentPadding.calculateTopPadding()))
+    Box(modifier = modifier) {
+        ShelterDisplayScreen(shelterUiState, contentPadding)
+    }
 }
-
-/**
- * Displays shelter information based on API response.
- */
 @Composable
-fun ShelterDisplayScreen(shelterUiState: ShelterUiState, modifier: Modifier = Modifier) {
+fun ShelterDisplayScreen(
+    shelterUiState: ShelterUiState,
+    contentPadding: PaddingValues
+) {
     when (shelterUiState) {
         is ShelterUiState.Loading -> {
-            Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text(text = "Loading shelters...")
             }
         }
         is ShelterUiState.Success -> {
-            LazyColumn(modifier = modifier.fillMaxSize().padding(16.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = contentPadding
+            ) {
                 items(shelterUiState.shelters.filterNotNull()) { shelter ->
                     ShelterCard(shelter)
                 }
             }
         }
         is ShelterUiState.Error -> {
-            Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text(text = "Error: ${shelterUiState.message}")
             }
         }
