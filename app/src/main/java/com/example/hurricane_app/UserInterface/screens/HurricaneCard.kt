@@ -8,7 +8,12 @@ import androidx.compose.ui.unit.dp
 import com.example.hurricane_app.network.HurricaneForecast
 import com.example.hurricane_app.network.ShelterFeature
 @Composable
-fun HurricaneCard(forecast: HurricaneForecast) {
+fun HurricaneCard(
+    forecast: HurricaneForecast,
+    isCurrent: Boolean
+) {
+    val titleLabel = if (isCurrent) "Current Position" else "Forecasted Position"
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -17,10 +22,8 @@ fun HurricaneCard(forecast: HurricaneForecast) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "🌀 ${forecast.status}",
-                style = MaterialTheme.typography.titleMedium
-            )
+            // You can also show forecast.status if you want, e.g. "🌀 Tropical Storm"
+            Text(text = titleLabel, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "📅 Date: ${forecast.dateTime}")
             Text(text = "🌍 Location: ${forecast.location.latitude}, ${forecast.location.longitude}")

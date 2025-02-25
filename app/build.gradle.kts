@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.compose.material:material") // Material 2
     implementation("androidx.compose.material3:material3") // Material 3
 
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     // Navigation for Compose (Latest Stable Version)
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
