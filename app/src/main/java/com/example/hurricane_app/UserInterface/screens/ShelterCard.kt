@@ -1,19 +1,37 @@
 package com.example.hurricane_app.UserInterface.screens
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.hurricane_app.network.ShelterFeature
 
 @Composable
 fun ShelterCard(shelter: ShelterFeature) {
+    val context = LocalContext.current
+
+    // Extract latitude and longitude
+    val latitude = shelter.geometry?.latitude
+    val longitude = shelter.geometry?.longitude
+
+    // Check if coordinates are available
+    val mapsIntent = if (latitude != null && longitude != null) {
+        Intent(Intent.ACTION_VIEW, Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude(${shelter.attributes.shelterName})"))
+    } else null
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable(enabled = mapsIntent != null) {
+                mapsIntent?.let { context.startActivity(it) }
+            },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -40,9 +58,14 @@ fun ShelterCard(shelter: ShelterFeature) {
                 Text(text = "🐶 Pet Friendly: ${if (it.trim().isNotEmpty()) "Yes" else "No"}")
             }
 
-            // 🔹 Add Coordinates (Latitude & Longitude)
-            if (shelter.geometry?.latitude != null && shelter.geometry.longitude != null) {
-                Text(text = "📌 Coordinates: ${shelter.geometry.latitude}, ${shelter.geometry.longitude}")
+            // 🔹 Display Coordinates & Enable Click for Google Maps
+            if (latitude != null && longitude != null) {
+                Text(text = "📌 Coordinates: $latitude, $longitude")
+                Text(
+                    text = "🗺 Open in Google Maps",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { context.startActivity(mapsIntent) }
+                )
             }
         }
     }
