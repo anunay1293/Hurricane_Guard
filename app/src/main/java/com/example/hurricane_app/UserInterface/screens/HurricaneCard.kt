@@ -22,7 +22,7 @@ fun HurricaneCard(
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // You can also show forecast.status if you want, e.g. "🌀 Tropical Storm"
+
             Text(text = titleLabel, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "📅 Date: ${forecast.dateTime}")

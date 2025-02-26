@@ -11,7 +11,7 @@ data class ShelterResponse(
 @Serializable
 data class ShelterFeature(
     @SerialName("attributes") val attributes: ShelterAttributes,
-    @SerialName("geometry") val geometry: ShelterGeometry? = null // Some shelters may not have geometry
+    @SerialName("geometry") val geometry: ShelterGeometry? = null
 )
 
 @Serializable
