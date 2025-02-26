@@ -30,7 +30,7 @@ fun HurricaneMap(forecasts: List<HurricaneForecast>) {
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-        // For each forecast, place a marker. Label first as current, second as forecasted
+
         forecasts.forEachIndexed { index, forecast ->
             val isCurrent = (index == 0)
             val markerTitle = if (isCurrent) "Current Position" else "Forecasted Position"

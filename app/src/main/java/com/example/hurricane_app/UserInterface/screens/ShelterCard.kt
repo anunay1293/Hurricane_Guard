@@ -16,11 +16,11 @@ import com.example.hurricane_app.network.ShelterFeature
 fun ShelterCard(shelter: ShelterFeature) {
     val context = LocalContext.current
 
-    // Extract latitude and longitude
+
     val latitude = shelter.geometry?.latitude
     val longitude = shelter.geometry?.longitude
 
-    // Check if coordinates are available
+
     val mapsIntent = if (latitude != null && longitude != null) {
         Intent(Intent.ACTION_VIEW, Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude(${shelter.attributes.shelterName})"))
     } else null
@@ -58,7 +58,7 @@ fun ShelterCard(shelter: ShelterFeature) {
                 Text(text = "🐶 Pet Friendly: ${if (it.trim().isNotEmpty()) "Yes" else "No"}")
             }
 
-            // 🔹 Display Coordinates & Enable Click for Google Maps
+
             if (latitude != null && longitude != null) {
                 Text(text = "📌 Coordinates: $latitude, $longitude")
                 Text(

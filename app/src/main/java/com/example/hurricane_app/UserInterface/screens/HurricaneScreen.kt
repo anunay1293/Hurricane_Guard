@@ -49,10 +49,10 @@ fun HurricaneScreen() {
                     // Show the map with markers
                     HurricaneMap(forecasts)
                 } else {
-                    // Show the list, labeling the first as current & second as forecast
+
                     LazyColumn {
                         itemsIndexed(forecasts) { index, forecast ->
-                            // Pass a flag to the card telling it which label to use
+
                             HurricaneCard(
                                 forecast = forecast,
                                 isCurrent = (index == 0)
