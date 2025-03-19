@@ -5,4 +5,6 @@ sealed class Screen(val route: String) {
     object Shelter : Screen("shelter")
     object StayAtHome : Screen("stay_at_home")
     object Hurricane : Screen("hurricane")
+    object Checklist : Screen("checklist")
+    object ChecklistDetail : Screen("checklist_detail")
 }
