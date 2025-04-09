@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hurricane_app.UserInterface.screens.ChecklistDetailScreen
+import com.example.hurricane_app.UserInterface.screens.ChecklistListScreen
 import com.example.hurricane_app.UserInterface.screens.HurricaneScreen
 import com.example.hurricane_app.navigation.Screen
 import com.example.hurricane_app.ui.theme.Hurricane_AppTheme
@@ -82,6 +84,17 @@ fun MainScreen(navController: NavHostController) {
             composable(Screen.Hurricane.route) {
                 HurricaneScreen()
             }
+            composable(Screen.Checklist.route) {
+                ChecklistListScreen(navController = navController)
+            }
+
+            // 2) Checklist detail screen, passing a checklistId argument
+            composable(
+                route = Screen.ChecklistDetail.route + "/{checklistId}",
+            ) { backStackEntry ->
+                val checklistId = backStackEntry.arguments?.getString("checklistId")?.toIntOrNull() ?: 0
+                ChecklistDetailScreen(checklistId = checklistId, navController = navController)
+            }
         }
     }
 }
@@ -114,7 +127,8 @@ fun AppBottomNavigation(navController: NavController) {
         Screen.MentalHealth to R.drawable.ic_mental_health,
         Screen.Shelter to R.drawable.ic_shelter,
         Screen.StayAtHome to R.drawable.ic_stay_at_home,
-        Screen.Hurricane to R.drawable.ic_hurricane
+        Screen.Hurricane to R.drawable.ic_hurricane,
+        Screen.Checklist to R.drawable.ic_checklist
     )
 
     BottomNavigation {
