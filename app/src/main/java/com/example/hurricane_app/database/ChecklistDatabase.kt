@@ -6,13 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ChecklistEntity::class, ChecklistItemEntity::class],
-    version = 1,
+    entities = [ChecklistEntity::class, ChecklistItemEntity::class, ShelterEntity::class, HurricaneEntity::class],
+    version = 3,
     exportSchema = false
 )
 abstract class ChecklistDatabase : RoomDatabase() {
-
     abstract fun checklistDao(): ChecklistDao
+    abstract fun shelterDao(): ShelterDao
+    abstract fun hurricaneDao(): HurricaneDao
 
     companion object {
         @Volatile
@@ -24,7 +25,10 @@ abstract class ChecklistDatabase : RoomDatabase() {
                     context.applicationContext,
                     ChecklistDatabase::class.java,
                     "checklist_database"
-                ).build()
+                )
+
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }
