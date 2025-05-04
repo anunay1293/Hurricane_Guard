@@ -42,20 +42,38 @@ import com.example.hurricane_app.UserInterface.screens.HurricaneScreen
 import com.example.hurricane_app.navigation.Screen
 import com.example.hurricane_app.ui.theme.Hurricane_AppTheme
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.example.hurricane_app.R
+
+
+
+import androidx.activity.compose.setContent
+import androidx.compose.material3.Surface
+
+import androidx.compose.foundation.layout.fillMaxSize
+
+import androidx.navigation.compose.rememberNavController
+import com.example.hurricane_app.ui.theme.Hurricane_AppTheme
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Hurricane_AppTheme {
-                val navController = rememberNavController()
-
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(navController)
-                   // ShelterDisplay()
-                   // MentalHealthScreen()
+                    MainScreen(navController = rememberNavController())
                 }
             }
         }
@@ -101,21 +119,34 @@ fun MainScreen(navController: NavHostController) {
 
 @Composable
 fun StayAtHomeScreen() {
-    val guidelines = listOf(
-        Pair(R.drawable.barricade, R.string.guideline_barricade),
-        Pair(R.drawable.gas_precautions, R.string.guideline_gas_precaution),
-        Pair(R.drawable.essential_items, R.string.guideline_essential_items),
-        Pair(R.drawable.stock_supplies, R.string.guideline_stock_supplies),
-        Pair(R.drawable.emergency_contacts, R.string.guideline_emergency_contacts)
-    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "Guidelines",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        items(guidelines) { guideline ->
-            MentalHealthCard(imageRes = guideline.first, adviceTextRes = guideline.second)
+        val guidelines = listOf(
+            Pair(R.drawable.barricade, R.string.guideline_barricade),
+            Pair(R.drawable.gas_precautions, R.string.guideline_gas_precaution),
+            Pair(R.drawable.essential_items, R.string.guideline_essential_items),
+            Pair(R.drawable.stock_supplies, R.string.guideline_stock_supplies),
+            Pair(R.drawable.emergency_contacts, R.string.guideline_emergency_contacts)
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            items(guidelines) { (imageRes, textRes) ->
+                MentalHealthCard(imageRes = imageRes, adviceTextRes = textRes)
+            }
         }
     }
 }
@@ -124,10 +155,10 @@ fun StayAtHomeScreen() {
 @Composable
 fun AppBottomNavigation(navController: NavController) {
     val items = listOf(
-        Screen.MentalHealth to R.drawable.ic_mental_health,
-        Screen.Shelter to R.drawable.ic_shelter,
-        Screen.StayAtHome to R.drawable.ic_stay_at_home,
         Screen.Hurricane to R.drawable.ic_hurricane,
+        Screen.Shelter to R.drawable.ic_shelter,
+        Screen.MentalHealth to R.drawable.ic_mental_health,
+        Screen.StayAtHome to R.drawable.ic_stay_at_home,
         Screen.Checklist to R.drawable.ic_checklist
     )
 
@@ -143,19 +174,60 @@ fun AppBottomNavigation(navController: NavController) {
     }
 }
 @Composable
-fun MentalHealthScreen(){
-    val resources = listOf(
-        Pair(R.drawable.meditation,R.string.advice_meditation),
-        Pair(R.drawable.familysupport,R.string.advice_family_support),
-        Pair(R.drawable.relaxation,R.string.advice_relaxation),
-        Pair(R.drawable.sleep_schedule,R.string.advice_sleep),
-        Pair(R.drawable.limitstress,R.string.advice_limit_news)
+fun MentalHealthScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = "Mental Health",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
         )
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)){
-        items(resources){resource->
-            MentalHealthCard(imageRes = resource.first, adviceTextRes =resource.second )
+
+        val resources = listOf(
+            Pair(R.drawable.meditation, R.string.advice_meditation),
+            Pair(R.drawable.familysupport, R.string.advice_family_support),
+            Pair(R.drawable.relaxation, R.string.advice_relaxation),
+            Pair(R.drawable.sleep_schedule, R.string.advice_sleep),
+            Pair(R.drawable.limitstress, R.string.advice_limit_news)
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            items(resources) { (imageRes, adviceTextRes) ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Image(
+                            painter = painterResource(id = imageRes),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(id = adviceTextRes),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
         }
     }
 }

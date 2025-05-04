@@ -7,33 +7,44 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hurricane_app.database.HurricaneEntity
 import com.example.hurricane_app.network.HurricaneForecast
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun HurricaneScreen() {
     val hurricaneViewModel: HurricaneViewModel = viewModel()
     val hurricaneData by hurricaneViewModel.hurricaneData.collectAsState()
-
     var isMapView by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
     ) {
-        Text(text = "Hurricane Forecast", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Hurricane Forecast",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
+
         Button(
             onClick = { isMapView = !isMapView },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = if (isMapView) "Show List" else "Show Map")
         }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         when (hurricaneData) {
             is HurricaneUiState.Loading -> {
                 Box(
@@ -48,7 +59,10 @@ fun HurricaneScreen() {
                 if (isMapView) {
                     HurricaneMap(forecasts)
                 } else {
-                    LazyColumn {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp)
+                    ) {
                         itemsIndexed(forecasts) { index, forecast ->
                             HurricaneCard(
                                 forecast = forecast,
@@ -59,19 +73,23 @@ fun HurricaneScreen() {
                 }
             }
             is HurricaneUiState.OfflineSuccess -> {
-                val hurricanes: List<HurricaneEntity> = (hurricaneData as HurricaneUiState.OfflineSuccess).hurricanes
+                val hurricanes: List<HurricaneEntity> =
+                    (hurricaneData as HurricaneUiState.OfflineSuccess).hurricanes
+                // Offline banner + same layout
                 Column {
-                    // Offline banner
                     Text(
                         text = "Offline Data",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                     if (isMapView) {
                         OfflineHurricaneMap(hurricanes)
                     } else {
-                        LazyColumn {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp)
+                        ) {
                             itemsIndexed(hurricanes) { index, hurricane ->
                                 OfflineHurricaneCard(hurricane)
                             }
@@ -80,7 +98,10 @@ fun HurricaneScreen() {
                 }
             }
             is HurricaneUiState.Error -> {
-                Text(text = "Error: ${(hurricaneData as HurricaneUiState.Error).message}")
+                Text(
+                    text = "Error: ${(hurricaneData as HurricaneUiState.Error).message}",
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }

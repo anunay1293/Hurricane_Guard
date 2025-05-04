@@ -10,16 +10,16 @@ import com.example.hurricane_app.database.HurricaneEntity
 
 @Composable
 fun OfflineHurricaneCard(hurricane: HurricaneEntity) {
-    val titleLabel = "Offline Data"
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = titleLabel, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Offline Data", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "📅 Date: ${hurricane.dateTime}")
             Text(text = "🌍 Location: ${hurricane.latitude}, ${hurricane.longitude}")

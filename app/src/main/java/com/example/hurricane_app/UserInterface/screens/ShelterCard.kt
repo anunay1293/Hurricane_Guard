@@ -28,12 +28,11 @@ fun ShelterCard(shelter: ShelterFeature) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable(enabled = mapsIntent != null) {
-                mapsIntent?.let { context.startActivity(it) }
-            },
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .padding(vertical = 4.dp)
+            .clickable(enabled = mapsIntent != null) { mapsIntent?.let(context::startActivity) },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(

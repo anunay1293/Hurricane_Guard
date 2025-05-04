@@ -13,7 +13,7 @@ import retrofit2.http.Query
 private const val BASE_URL = "https://atlas.microsoft.com/weather/tropical/storms/"
 
 
-private const val API_KEY = "7L6AI4Eq9cRE7H1g1KSZ5MrVCUY1TEhFxUSBFjgqasStlZV1yqa3JQQJ99BAAC8vTInN6yWzAAAgAZMP4G6P"
+private const val API_KEY = "6520yitc6nEEithVRrXlBzBJIz8nZtHOeVSmgA1bTMccyDSOHruYJQQJ99BDAC8vTInN6yWzAAAgAZMP2tbs"
 
 
 private val retrofit = Retrofit.Builder()

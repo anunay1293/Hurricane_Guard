@@ -8,13 +8,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
-
 import com.example.hurricane_app.database.ChecklistEntity
-
 import com.example.hurricane_app.navigation.Screen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.style.TextAlign
+
+import androidx.compose.ui.unit.dp
+
+
 
 @Composable
 fun ChecklistListScreen(
@@ -22,23 +29,23 @@ fun ChecklistListScreen(
     viewModel: ChecklistViewModel = viewModel()
 ) {
     val allChecklists by viewModel.allChecklists.collectAsState(initial = emptyList())
-
     var newChecklistName by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
     ) {
         Text(
             text = "Personalized Emergency Checklists",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Row to add a new checklist
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
@@ -54,7 +61,11 @@ fun ChecklistListScreen(
                         viewModel.addNewChecklist(newChecklistName)
                         newChecklistName = ""
                     }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Text("Add")
             }
@@ -62,14 +73,16 @@ fun ChecklistListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // List of existing checklists
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
             items(allChecklists) { checklist ->
                 ChecklistRow(
                     checklist = checklist,
                     onDelete = { viewModel.deleteChecklist(it) },
                     onOpen = {
-                        // Navigate to detail screen
                         navController.navigate(Screen.ChecklistDetail.route + "/${it.checklistId}")
                     }
                 )
@@ -88,22 +101,32 @@ fun ChecklistRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = checklist.name, style = MaterialTheme.typography.titleMedium)
-
-            Row {
-                Button(onClick = { onOpen(checklist) }) {
-                    Text("Open")
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                OutlinedButton(onClick = { onDelete(checklist) }) {
-                    Text("Delete")
-                }
+            Text(
+                text = checklist.name,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            Button(
+                onClick = { onOpen(checklist) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Text("Open")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            OutlinedButton(onClick = { onDelete(checklist) }) {
+                Text("Delete")
             }
         }
     }

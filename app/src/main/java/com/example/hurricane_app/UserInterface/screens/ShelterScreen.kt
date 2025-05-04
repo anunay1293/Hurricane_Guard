@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextAlign
 import com.example.hurricane_app.database.ShelterEntity
 
 @Composable
@@ -20,75 +21,74 @@ fun ShelterScreen(
     var isMapView by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.padding(16.dp)) {
-        Text(text = "Shelter Locations", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Shelter Locations",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
 
-        // Toggle Button
         Button(
             onClick = { isMapView = !isMapView },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = if (isMapView) "Show List" else "Show Map")
         }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         when (shelterUiState) {
-            is ShelterUiState.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(text = "Loading shelters...")
-                }
+            is ShelterUiState.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Loading shelters...")
             }
+
             is ShelterUiState.Success -> {
-                // Online data (network model)
                 val shelters = shelterUiState.shelters.filterNotNull()
-                if (isMapView) {
-                    ShelterMap(shelters)
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = contentPadding
-                    ) {
-                        items(shelters) { shelter ->
-                            ShelterCard(shelter)
-                        }
-                    }
+                if (isMapView) ShelterMap(shelters) else LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = contentPadding
+                ) {
+                    items(shelters) { ShelterCard(it) }
                 }
             }
+
             is ShelterUiState.OfflineSuccess -> {
-                // Offline data from local database (ShelterEntity)
                 val shelters: List<ShelterEntity> = shelterUiState.shelters
                 Column {
-                    // Display offline banner
                     Text(
                         text = "Offline Data",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    if (isMapView) {
-                        OfflineShelterMap(shelters)
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = contentPadding
-                        ) {
-                            items(shelters) { shelter ->
-                                OfflineShelterCard(shelter)
-                            }
-                        }
+                    if (isMapView) OfflineShelterMap(shelters) else LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = contentPadding
+                    ) {
+                        items(shelters) { OfflineShelterCard(it) }
                     }
                 }
             }
-            is ShelterUiState.Error -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(text = "Error: ${shelterUiState.message}")
-                }
+
+            is ShelterUiState.Error -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Error: ${shelterUiState.message}",
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }
